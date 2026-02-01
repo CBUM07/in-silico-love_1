@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>In-Silico Love Discovery</title>
+
+<style>
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #0f2027, #203a43, #2c5364);
+  color: white;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+  text-align: center;
+}
+
+header {
+  padding: 20px;
+}
+
+header img {
+  width: 90px;
+  opacity: 0.85;
+}
+
+.card {
+  background: rgba(255,255,255,0.08);
+  border-radius: 20px;
+  padding: 30px;
+  width: 80%;
+  margin: auto;
+  box-shadow: 0 0 40px rgba(255,105,180,0.35);
+}
+
+.hidden { display: none; }
+
+button {
+  background: #ff5fa2;
+  border: none;
+  color: white;
+  padding: 14px 30px;
+  font-size: 18px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+button:hover { background: #ff2f86; }
+
+.game {
+  position: relative;
+  height: 60vh;
+}
+
+.molecule {
+  position: absolute;
+  width: 45px;
+  cursor: pointer;
+  animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+  from { transform: translateY(70vh); }
+  to { transform: translateY(-80vh); }
+}
+
+.scoreboard {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+.heart {
+  font-size: 70px;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  50% { transform: scale(1.3); }
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2023/02/28/audio_0a5d1c6f1c.mp3">
+</audio>
+
+<header>
+  <!-- NTU logo (subtle) -->
+  <img src="https://www.ntu.edu.sg/images/default-source/ntu-logo/ntu_logo_full_colour.png" alt="NTU Logo">
+</header>
+
+<div class="card" id="intro">
+  <h1>🧬 In-Silico Drug Discovery Simulation</h1>
+  <p>Lead Scientist:</p>
+  <h2 style="color:#ff9bd1;">Anika Bandyopadhyay</h2>
+  <p>PhD Researcher · Drug Discovery · NTU</p>
+  <p>Initializing cooperative binding analysis…</p>
+  <button onclick="startGame()">Start Simulation</button>
+</div>
+
+<div class="card hidden" id="gameCard">
+  <h2>🧪 2-Player Binding Game</h2>
+  <p>Both players must stabilize the ligand</p>
+
+  <div class="scoreboard">
+    <div>👤 You: <span id="p1">0</span></div>
+    <div>🧬 Anika: <span id="p2">0</span></div>
+  </div>
+
+  <div class="game" id="game"></div>
+</div>
+
+<div class="card hidden" id="result">
+  <h1>🎯 Optimal Binding Achieved</h1>
+  <p>Strongest cooperative interaction detected between:</p>
+  <h2 style="color:#ff9bd1;">You & Anika 💖</h2>
+  <button onclick="finalStep()">View Conclusion</button>
+</div>
+
+<div class="card hidden" id="final">
+  <div class="heart">💘</div>
+  <h2>Will you be my Valentine, Anika?</h2>
+  <button onclick="yes()">Yes 💕</button>
+  <button onclick="yes()">Always 🧬</button>
+</div>
+
+<script>
+let p1 = 0, p2 = 0;
+let active = false;
+
+function startGame() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("gameCard").classList.remove("hidden");
+  document.getElementById("music").play();
+  active = true;
+
+  for (let i = 0; i < 18; i++) spawnMolecule();
+  setTimeout(endGame, 9000);
+}
+
+function spawnMolecule() {
+  if (!active) return;
+
+  const mol = document.createElement("img");
+  mol.className = "molecule";
+
+  // Benzene + helix SVGs
+  const svgs = [
+    "https://upload.wikimedia.org/wikipedia/commons/6/6f/Benzene.svg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8a/DNA_double_helix.svg"
+  ];
+  mol.src = svgs[Math.floor(Math.random() * svgs.length)];
+
+  mol.style.left = Math.random() * 90 + "vw";
+  mol.style.animationDuration = (5 + Math.random() * 4) + "s";
+
+  mol.onclick = () => {
+    if (p1 <= p2) {
+      p1++;
+      document.getElementById("p1").innerText = p1;
+    } else {
+      p2++;
+      document.getElementById("p2").innerText = p2;
+    }
+    mol.remove();
+  };
+
+  document.getElementById("game").appendChild(mol);
+  setTimeout(() => mol.remove(), 9000);
+}
+
+function endGame() {
+  active = false;
+  document.getElementById("gameCard").classList.add("hidden");
+  document.getElementById("result").classList.remove("hidden");
+}
+
+function finalStep() {
+  document.getElementById("result").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+}
+
+function yes() {
+  document.body.innerHTML =
+    "<h1 style='margin-top:150px;'>💖 Best discovery ever 💖<br>Happy Valentine’s Day, Anika 🧬🌸</h1>";
+}
+</script>
+
+</body>
+</html>
